@@ -19,7 +19,8 @@
                 containerClass: "@class",
                 barClass: "@",
                 ngModel: "=",
-                mode: '@'
+                mode: '@',
+                value: "="
             },
             restrict: "E",
             transclude: true,
@@ -127,12 +128,27 @@
                             bar.progressObj.set(newVal);
                         });
                     }
+                    $scope.$watch('bar.value', function (newVal) {
+                        if(typeof newVal !== 'number' || newVal < 0 || newVal !== newVal){
+                            newVal = 0;
+                        }
+
+                        if(newVal > 100){
+                            newVal = 100;
+                        }
+
+                        if (bar.manager) {
+                            bar.manager._updateValue(newVal);
+                        }
+                        bar.progressObj.set(newVal);
+                    });
                 };
                 bar.init();
             }]
         }
     });
 }());
+
 (function () {
     "use strict";
     var requestAnimationFrame = (function () {
